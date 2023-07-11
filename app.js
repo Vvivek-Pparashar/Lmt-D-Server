@@ -1,7 +1,8 @@
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
-const router = require("./Routes/Route");
+const adminRouter = require("./Routes/AdminRoute");
+const employeeRouter = require("./Routes/EmployeeRouter");
 const helmet = require("helmet");
 
 const app = express();
@@ -17,6 +18,7 @@ app.use(helmet());
 
 const port = 3000;
 
-app.use("/api/products", router);
+app.use("/api/admin", adminRouter);
+app.use("/api/employee", employeeRouter);
 
 module.exports = app;

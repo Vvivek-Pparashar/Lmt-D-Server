@@ -1,6 +1,6 @@
 const { default: mongoose } = require("mongoose");
 
-const productSchema = mongoose.Schema({
+const adminSchema = mongoose.Schema({
   username : {
     type : String,
     required : [true, "give a username"]
@@ -17,4 +17,4 @@ const productSchema = mongoose.Schema({
   }
 });
 
-module.exports = mongoose.model("User", productSchema);
+module.exports = mongoose.model("admin", adminSchema);
