@@ -16,11 +16,11 @@ const getEmployees = asyncHandler(async (req, res) => {
 const getEmployee = asyncHandler(async (req, res) => {
   const { username } = req.params;
   const employee = await Employee.findOne({ username:username });
-
+  console.log(employee)
   if (!employee) {
     return res.status(404).json({ msg: "No employee for this username" });
   }
-  res.status(200).json({ employee });
+  res.status(200).json( employee );
 });
 
 //@desc     post a employee

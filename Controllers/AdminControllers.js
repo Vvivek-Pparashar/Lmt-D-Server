@@ -18,9 +18,9 @@ const getAdmin = asyncHandler(async (req, res) => {
   const admin = await Admin.findOne({ username:username });
 
   if (!admin) {
-    return res.status(404).json({ msg: "No Admin for this id" });
+    return res.status(404).json({ msg: "No Admin for this username" });
   }
-  res.status(200).json({ admin });
+  res.status(200).json( admin );
 });
 
 //@desc     post a Admin
