@@ -119,7 +119,7 @@ const addAdmin = async (req, res) => {
       return;
     }
 
-    const newAdmin = new Employee({
+    const newAdmin = new Admin({
       username,
       password,
       admin,
