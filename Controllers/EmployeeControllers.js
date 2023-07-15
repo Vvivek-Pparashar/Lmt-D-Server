@@ -107,7 +107,7 @@ const addAttendance = asyncHandler(async (req, res) => {
   });
 
   if (isAttendanceMarked) {
-    res.status(400).json({ message: "Attendance already marked for today" });
+    res.status(200).json({ message: "Attendance already marked for today" });
     return;
   }
 
