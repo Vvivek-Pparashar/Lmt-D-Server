@@ -1,6 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const Employee = require("../Model/EmployeeSchema");
-const { Types } = require("mongoose");
+
 //@desc     get all Employees
 //@route    GET /api/Employees
 //@access   public
@@ -14,11 +14,11 @@ const getEmployees = asyncHandler(async (req, res) => {
 //@access   public
 
 const getEmployee = asyncHandler(async (req, res) => {
-  const { id: taskId } = req.params;
-  const employee = await Employee.findOne({ _id: taskId });
+  const { username } = req.params;
+  const employee = await Employee.findOne({ username:username });
 
   if (!employee) {
-    return res.status(404).json({ msg: "No employee for this id" });
+    return res.status(404).json({ msg: "No employee for this username" });
   }
   res.status(200).json({ employee });
 });
@@ -73,6 +73,9 @@ const deleteEmployee = asyncHandler(async (req, res) => {
 });
 
 
+
+//@desc     Employee attendance add
+//@route    PUT /api/Employees/attendance/:id
 const addAttendance = asyncHandler(async (req, res) => {
   const { username } = req.params;
   const currentDate = new Date().toISOString().split("T")[0];
@@ -117,38 +120,6 @@ const addAttendance = asyncHandler(async (req, res) => {
 });
 
 
-const getAttendance = asyncHandler(async (req, res) => {
-  const { username } = req.params;
-  console.log(username)
-  const currentDate = new Date().toISOString();
-
-  const employee = await Employee.findOne({username:username});
-
-  if (!employee) {
-    res.status(404);
-    throw new Error("Employee not found");
-  }
-  const isAttendanceMarked = employee.attendance.some((entry) => {
-    const entryDate = new Date(entry.date);
-    const entryYear = entryDate.getFullYear();
-    const entryMonth = entryDate.getMonth();
-    const entryDay = entryDate.getDate();
-
-    const currentYear = new Date(currentDate).getFullYear();
-    const currentMonth = new Date(currentDate).getMonth();
-    const currentDay = new Date(currentDate).getDate();
-
-
-    return (
-      entryYear === currentYear &&
-      entryMonth === currentMonth &&
-      entryDay === currentDay
-    );
-  });
-
-  res.status(200).json({ attendanceMarked: isAttendanceMarked });
-});
-
 
 module.exports = {
   getEmployees,
@@ -157,5 +128,5 @@ module.exports = {
   putEmployee,
   deleteEmployee,
   addAttendance,
-  getAttendance,
+
 };

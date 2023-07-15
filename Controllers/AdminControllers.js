@@ -1,6 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const Admin = require("../Model/AdminSchema");
-
+const Employee = require("../Model/EmployeeSchema");
 //@desc     get all Admins
 //@route    GET /api/Admins
 //@access   public
@@ -14,8 +14,8 @@ const getAdmins = asyncHandler(async (req, res) => {
 //@access   public
 
 const getAdmin = asyncHandler(async (req, res) => {
-  const { id: taskId } = req.params;
-  const admin = await Admin.findOne({ _id: taskId });
+  const { username } = req.params;
+  const admin = await Admin.findOne({ username:username });
 
   if (!admin) {
     return res.status(404).json({ msg: "No Admin for this id" });
@@ -55,28 +55,107 @@ const putAdmin = asyncHandler(async (req, res) => {
   res.status(200).json(updatedAdmin);
 });
 
-//@desc     delete a Admin
-//@route    PUT /api/Admins/:id
-//@access   private
-const deleteAdmin = asyncHandler(async (req, res) => {
-  const admin = await Admin.findById(req.params.id);
 
-  if (!admin) {
-    console.log("vivek");
-    res.status(404);
-    throw new Error("Admin not found");
+
+//---------------------------------------------- Add and Delete User by admin-------------------------------------------------------
+const addUser = async (req, res) => {
+  try {
+    const { username } = req.params;
+    const password = "345432"; // Generate a random 6-digit password later
+    const admin = false;
+
+    // Check if the username already exists
+    const existingUser = await Employee.findOne({ username:username });
+    if (existingUser) {
+      res.status(400).json({ error: 'Username already exists' });
+      return;
+    }
+
+    const employee = new Employee({
+      username,
+      password,
+      admin,
+    });
+
+    const newUser = await employee.save();
+    res.status(201).json(newUser);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to add user' });
   }
+};
 
-  console.log(admin)
 
-  await Admin.findOneAndDelete({ _id: req.params.id });
-  res.status(200).json({ id: req.params.id });
-});
+const deleteUser = async (req, res) => {
+  try {
+    const { username } = req.params;
 
+    const deletedUser = await Employee.findOneAndDelete({ username });
+
+    if (!deletedUser) {
+      res.status(404).json({ error: 'User not found' });
+      return;
+    }
+
+    res.status(200).json({ message: 'User deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to delete user' });
+  }
+};
+
+//--------------------------------------------------------------------------------------------------------------
+
+
+//-----------------------------------------------------------Add and delete admin by admin-----------------------------------------
+const addAdmin = async (req, res) => {
+  try {
+    const { username } = req.params;
+    const password = "345432"; // Generate a random 6-digit password later
+    const admin = true;
+
+    // Check if the username already exists
+    const existingAdmin = await Admin.findOne({ username:username });
+    if (existingAdmin) {
+      res.status(400).json({ error: 'Username already exists' });
+      return;
+    }
+
+    const newAdmin = new Employee({
+      username,
+      password,
+      admin,
+    });
+
+    const newUser = await newAdmin.save();
+    res.status(201).json(newUser);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to add user' });
+  }
+};
+
+
+const deleteAdmin = async (req, res) => {
+  try {
+    const { username } = req.params;
+
+    const deletedUser = await Admin.findOneAndDelete({ username:username,admin:true });
+
+    if (!deletedUser) {
+      res.status(404).json({ error: 'User not found' });
+      return;
+    }
+
+    res.status(200).json({ message: 'User deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to delete user' });
+  }
+};
 module.exports = {
   getAdmins,
   getAdmin,
   postAdmin,
   putAdmin,
   deleteAdmin,
+  addUser,
+  deleteUser,
+  addAdmin,
 };
