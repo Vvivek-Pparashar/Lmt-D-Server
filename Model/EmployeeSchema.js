@@ -14,7 +14,21 @@ const employeeSchema = mongoose.Schema({
   admin : {
     type : Boolean,
     required : [true, "give admin rights"]
-  }
+  },
+  attendance: {
+    type: [
+      {
+        date: {
+          type: Date,
+          _id: false,
+        },
+      },
+    ],
+    required: false,
+  },
+
+
+
 });
 
 module.exports = mongoose.model("employee", employeeSchema);
