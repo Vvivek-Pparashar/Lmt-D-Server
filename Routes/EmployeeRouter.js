@@ -11,5 +11,5 @@ const router = express.Router();
 
 router.route("/").get(getEmployees);
 router.route("/:username").get(getEmployee);
-router.route("/attendance/:username").get(addAttendance)
+router.route("/attendance/:username").get(addAttendance).post(addAttendance)
 module.exports = router;
