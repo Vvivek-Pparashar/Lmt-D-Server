@@ -9,7 +9,7 @@ const {
 } = require("../Controllers/EmployeeControllers");
 const router = express.Router();
 
-router.route("/").get(getEmployees);
+router.route("/").get(getEmployees).post(postEmployee);
 router.route("/:username").get(getEmployee);
-router.route("/attendance/:username").get(addAttendance).post(addAttendance)
+router.route("/attendance/:username").get(addAttendance).post(addAttendance);
 module.exports = router;
