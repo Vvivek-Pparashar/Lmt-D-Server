@@ -10,6 +10,6 @@ const {
 const router = express.Router();
 
 router.route("/").get(getEmployees).post(postEmployee);
-router.route("/:username").get(getEmployee);
+router.route("/:username").get(getEmployee).delete(deleteEmployee);
 router.route("/attendance/:username").get(addAttendance).post(addAttendance);
 module.exports = router;
