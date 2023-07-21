@@ -16,7 +16,7 @@ const getEmployees = asyncHandler(async (req, res) => {
 const getEmployee = asyncHandler(async (req, res) => {
   const { username } = req.params;
   const employee = await Employee.findOne({ username:username });
-  console.log(employee)
+
   if (!employee) {
     return res.status(404).json({ msg: "No employee for this username" });
   }
@@ -61,12 +61,12 @@ const deleteEmployee = asyncHandler(async (req, res) => {
   const employee = await Employee.findById(req.params.id);
 
   if (!employee) {
-    console.log("vivek");
+  
     res.status(404);
     throw new Error("employee not found");
   }
 
-  console.log(employee);
+
 
   await Employee.findOneAndDelete({ _id: req.params.id });
   res.status(200).json({ id: req.params.id });
@@ -122,7 +122,7 @@ const deleteEmployee = asyncHandler(async (req, res) => {
 const addAttendance = asyncHandler(async (req, res) => {
   const { username } = req.params;
   const currentDate = new Date().toISOString().split("T")[0];
-
+  console.log(currentDate)
   const employee = await Employee.findOne({ username });
 
   if (!employee) {
@@ -132,6 +132,7 @@ const addAttendance = asyncHandler(async (req, res) => {
 
   const isAttendanceMarked = employee.attendance.some((entry) => {
     const entryDate = new Date(entry.date);
+ 
     const entryYear = entryDate.getFullYear();
     const entryMonth = entryDate.getMonth();
     const entryDay = entryDate.getDate();
@@ -139,7 +140,7 @@ const addAttendance = asyncHandler(async (req, res) => {
     const currentYear = new Date(currentDate).getFullYear();
     const currentMonth = new Date(currentDate).getMonth();
     const currentDay = new Date(currentDate).getDate();
-
+    
     return (
       entryYear === currentYear &&
       entryMonth === currentMonth &&
@@ -168,6 +169,23 @@ const addAttendance = asyncHandler(async (req, res) => {
 });
 
 
+const getEmployeeByPan = asyncHandler(async (req, res) => {
+  const { firstName, lastName } = req.params;
+
+  // Find the employee using the firstName and lastName in the database
+  const employee = await Employee.findOne({
+    aadharNo: firstName,
+    panNo: lastName,
+  });
+
+  if (!employee) {
+    return res.status(404).json({ msg: "No employee found with the given first name and last name" });
+  }
+
+  res.status(200).json(employee);
+});
+
+
 module.exports = {
   getEmployees,
   getEmployee,
@@ -175,5 +193,6 @@ module.exports = {
   putEmployee,
   deleteEmployee,
   addAttendance,
+  getEmployeeByPan,
 
 };
