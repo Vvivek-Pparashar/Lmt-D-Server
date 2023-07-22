@@ -52,6 +52,8 @@ const employeeSchema = mongoose.Schema({
   bankName: { type: String },
   bankIFSCCode: { type: String },
   bankBranch: { type: String },
+  passportImage: { type: String },
+  familyImage: { type: String },
   page: { type: Number },
 });
 
