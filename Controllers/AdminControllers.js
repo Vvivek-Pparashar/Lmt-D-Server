@@ -149,6 +149,36 @@ const deleteAdmin = async (req, res) => {
     res.status(500).json({ error: 'Failed to delete user' });
   }
 };
+
+
+
+const updateUser = async (req, res) => {
+  try {
+    const { panNo, ...updateData } = req.query;
+
+    // First, let's find the user based on the "pandata" field
+
+    const userToUpdate = await Employee.findOne({ panNo : panNo });
+    
+    if (!userToUpdate) {
+      res.status(404).json({ error: 'User not found' });
+      return;
+    }
+
+    // Update the user's data with the new fields
+    for (const key in updateData) {
+      userToUpdate[key] = updateData[key];
+    }
+
+    // Save the updated user data to the database
+    const updatedUser = await userToUpdate.save();
+
+    res.status(200).json({ message: 'User updated successfully', updatedUser });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to update user' });
+  }
+};
+
 module.exports = {
   getAdmins,
   getAdmin,
@@ -158,4 +188,5 @@ module.exports = {
   addUser,
   deleteUser,
   addAdmin,
+  updateUser,
 };
